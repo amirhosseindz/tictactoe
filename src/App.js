@@ -1,21 +1,30 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
 
+class Sq extends Component {
+    render() {
+        return (
+            <div className="sq">{this.props.value}</div>
+        );
+    }
+}
+
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            allSq : Array(9).fill('-')
+        };
+    }
+
+    render() {
+        return (
+            <div className="App">
+                {this.state.allSq.map((v, k) => <Sq value={v} key={k}></Sq>)}
+            </div>
+        );
+    }
 }
 
 export default App;
