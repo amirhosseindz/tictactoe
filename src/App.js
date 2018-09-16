@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import _ from 'lodash/core';
 import './App.css';
 
 class Sq extends Component {
@@ -21,7 +22,11 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                {this.state.allSq.map((v, k) => <Sq value={v} key={k}></Sq>)}
+                {_.chunk(this.state.allSq.map((v, k) => {
+                    <Sq value={v} key={k}></Sq>
+                }), 3).map(group => {
+                    <div className="row">{group}</div>
+                })}
             </div>
         );
     }
