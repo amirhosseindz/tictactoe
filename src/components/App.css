@@ -3,16 +3,23 @@
     padding-top: 25px;
 }
 
+.App .btn {
+    font-size: 32px;
+}
+
 .board {
     margin-top: 25px;
 }
 
 .board .sq {
     border-radius: 0;
+    width: 150px;
+    height: 150px;
 }
 
 .status {
     margin-top: 25px;
+    font-size: 25px;
 }
 
 .status p {
