@@ -2,7 +2,6 @@ import './App.css';
 
 import React, {Component} from 'react';
 import {Button} from 'reactstrap';
-import _ from 'lodash';
 
 import StartModal from './StartModal';
 import Sq from './Sq';
@@ -21,7 +20,7 @@ class App extends Component {
 
     getInitialState() {
         return {
-            allSq: Array(9).fill(null),
+            allSq: Array(3).fill(null).map(() => Array(3).fill(null)),
             players: {
                 X: '',
                 O: ''
@@ -54,16 +53,50 @@ class App extends Component {
         });
     }
 
-    setSqValue(value, i) {
-        let {allSq, currPlayer, started} = this.state;
+    setSqValue(value, i, j) {
+        let {allSq, currPlayer, started, winner} = this.state;
 
-        if (value != null || !started)
+        if (value || !started || winner)
             return;
 
-        allSq[i] = currPlayer;
-        currPlayer = currPlayer === 'X' ? 'O' : 'X';
+        allSq[i][j] = currPlayer;
 
-        this.setState({allSq, currPlayer});
+        if (this.checkWinner(allSq, currPlayer))
+            this.setState({winner: currPlayer});
+        else {
+            currPlayer = currPlayer === 'X' ? 'O' : 'X';
+            this.setState({allSq, currPlayer});
+        }
+    }
+
+    checkWinner(allSq, player) {
+        let n = 3;
+
+        let diagonalSums = new Array(2).fill(0);
+        let columnSums = new Array(n).fill(0);
+        let rowSum = 0;
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) {
+                if (allSq[i][j] === player) {
+                    rowSum++;
+                    columnSums[j]++;
+                    if (i === n - 1 && columnSums[j] === n) {
+                        return true;
+                    }
+                    if (i === j) {
+                        diagonalSums[0]++;
+                        if (i === n - 1 && diagonalSums[0] === n) return true;
+                    }
+                    if (i === n - 1 - j) {
+                        diagonalSums[1]++;
+                        if (j === 0 && diagonalSums[1] === n) return true;
+                    }
+                }
+            }
+            console.log(rowSum);
+            if (rowSum === n) return true;
+            else rowSum = 0;
+        }
     }
 
     render() {
@@ -78,19 +111,20 @@ class App extends Component {
 
                 {started &&
                 <div className="status">
-                    <p><span>Current Player :</span> {players[currPlayer]} - {currPlayer}</p>
-                    {winner &&
-                    <p><span>Winner :</span> {players[currPlayer]} - {currPlayer}</p>}
+                    {winner ? (
+                        <p><span>Winner :</span> {players[currPlayer]} - {currPlayer}</p>
+                    ) : (
+                        <p><span>Current Player :</span> {players[currPlayer]} - {currPlayer}</p>
+                    )}
                 </div>}
 
                 <table className="board d-flex justify-content-center">
                     <tbody>
-                    {_.chunk(allSq.map((v, i) =>
-                        <Sq key={i} value={v} i={i} onClick={setSqValue}></Sq>
-                    ), 3)
-                        .map((group, k) =>
-                            <tr key={k}>{group}</tr>
-                        )}
+                    {allSq.map((rowSq, i) =>
+                        <tr key={i}>{rowSq.map((oneSq, j) =>
+                            <Sq key={j} value={oneSq} i={i} j={j} onClick={setSqValue}></Sq>
+                        )}</tr>
+                    )}
                     </tbody>
                 </table>
             </div>
