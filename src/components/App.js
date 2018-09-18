@@ -1,19 +1,11 @@
-import React, {Component} from 'react';
-import { Button, Modal, ModalBody, ModalHeader, ModalFooter, Input } from 'reactstrap';
-import _ from 'lodash';
 import './App.css';
 
-class Sq extends Component {
-    render() {
-        return (
-            <td>
-                <Button outline color="warning" className="sq">
-                    {this.props.value}
-                </Button>
-            </td>
-        );
-    }
-}
+import React, {Component} from 'react';
+import {Button} from 'reactstrap';
+import _ from 'lodash';
+
+import StartModal from './StartModal';
+import Sq from './Sq';
 
 class App extends Component {
     constructor(props) {
@@ -21,10 +13,15 @@ class App extends Component {
 
         this.state = {
             allSq: Array(9).fill('-'),
+            players: {
+                x: '',
+                o: ''
+            },
             modal: false
         };
 
         this.toggle = this.toggle.bind(this);
+        this.handle = this.handle.bind(this);
     }
 
     toggle() {
@@ -33,26 +30,21 @@ class App extends Component {
         });
     }
 
+    handle(e) {
+        let {players} = this.state;
+        players[e.target.name] = e.target.value;
+        this.setState({players});
+    }
+
     render() {
-        const {toggle} = this;
-        const {allSq, modal} = this.state;
+        const {allSq, modal, players} = this.state;
+        const {toggle, handle} = this;
 
         return (
             <div className="App">
                 <Button outline color="white" onClick={toggle}>Start</Button>
 
-                <Modal isOpen={modal} toggle={toggle}>
-                    <ModalHeader toggle={toggle}>Enter Players' Names</ModalHeader>
-                    <ModalBody>
-                        <Input placeholder="X" />
-                        <br />
-                        <Input placeholder="O" />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="primary" onClick={toggle}>Go!</Button>{' '}
-                        <Button color="secondary" onClick={toggle}>Cancel</Button>
-                    </ModalFooter>
-                </Modal>
+                <StartModal handle={handle} toggle={toggle} modal={modal} players={players}></StartModal>
 
                 <div className="status">
                     <p><span>Current Player :</span> Amir - X</p>
