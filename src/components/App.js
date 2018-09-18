@@ -69,9 +69,7 @@ class App extends Component {
         }
     }
 
-    checkWinner(allSq, player) {
-        let n = 3;
-
+    checkWinner(allSq, player, n=3) {
         let diagonalSums = new Array(2).fill(0);
         let columnSums = new Array(n).fill(0);
         let rowSum = 0;
@@ -93,7 +91,6 @@ class App extends Component {
                     }
                 }
             }
-            console.log(rowSum);
             if (rowSum === n) return true;
             else rowSum = 0;
         }
