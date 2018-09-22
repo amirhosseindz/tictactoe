@@ -2,7 +2,6 @@ import './App.css';
 
 import React, {Component} from 'react';
 import {Button} from 'reactstrap';
-import _ from 'lodash';
 
 import StartModal from './StartModal';
 import Sq from './Sq';
@@ -21,7 +20,7 @@ class App extends Component {
 
     getInitialState() {
         return {
-            allSq: Array(3).fill(Array(3).fill(null)),
+            allSq: Array(3).fill(null).map(() => Array(3).fill(null)),
             players: {
                 X: '',
                 O: ''
@@ -55,11 +54,9 @@ class App extends Component {
     }
 
     setSqValue(value, i, j) {
-        console.log(value, i, j);
+        let {allSq, currPlayer, started, winner} = this.state;
 
-        let {allSq, currPlayer, started} = this.state;
-
-        if (value != null || !started)
+        if (value || !started || winner)
             return;
 
         allSq[i][j] = currPlayer;
@@ -72,9 +69,7 @@ class App extends Component {
         }
     }
 
-    checkWinner(allSq, player) {
-        let n = 3;
-
+    checkWinner(allSq, player, n=3) {
         let diagonalSums = new Array(2).fill(0);
         let columnSums = new Array(n).fill(0);
         let rowSum = 0;
@@ -83,13 +78,16 @@ class App extends Component {
                 if (allSq[i][j] === player) {
                     rowSum++;
                     columnSums[j]++;
-                    if (i === n - 1 && columnSums[j] === n) return true;
-                    else if (i === j) {
+                    if (i === n - 1 && columnSums[j] === n) {
+                        return true;
+                    }
+                    if (i === j) {
                         diagonalSums[0]++;
                         if (i === n - 1 && diagonalSums[0] === n) return true;
-                    } else if (i === n - 1 - j) {
+                    }
+                    if (i === n - 1 - j) {
                         diagonalSums[1]++;
-                        if (j === 0 && diagonalSums[i] === n) return true;
+                        if (j === 0 && diagonalSums[1] === n) return true;
                     }
                 }
             }
@@ -119,9 +117,9 @@ class App extends Component {
 
                 <table className="board d-flex justify-content-center">
                     <tbody>
-                    {allSq.map((group, i) =>
-                        <tr key={i}>{group.map((v, j) =>
-                            <Sq key={j} value={v} i={i} j={j} onClick={setSqValue}></Sq>
+                    {allSq.map((rowSq, i) =>
+                        <tr key={i}>{rowSq.map((oneSq, j) =>
+                            <Sq key={j} value={oneSq} i={i} j={j} onClick={setSqValue}></Sq>
                         )}</tr>
                     )}
                     </tbody>
