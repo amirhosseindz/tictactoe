@@ -11,11 +11,6 @@ class App extends Component {
         super(props);
 
         this.state = this.getInitialState();
-
-        this.toggle = this.toggle.bind(this);
-        this.handle = this.handle.bind(this);
-        this.start = this.start.bind(this);
-        this.setSqValue = this.setSqValue.bind(this);
     }
 
     getInitialState() {
@@ -32,28 +27,28 @@ class App extends Component {
         };
     }
 
-    toggle() {
+    toggle = () => {
         this.setState({
             modal: !this.state.modal
         });
-    }
+    };
 
-    handle(e) {
+    handle = (e) => {
         let {players} = this.state;
         players[e.target.name] = e.target.value;
         this.setState({players});
-    }
+    };
 
-    start() {
+    start = () => {
         const {X, O} = this.state.players;
         this.setState({
             ...this.getInitialState(),
             players: {X, O},
             started: true
         });
-    }
+    };
 
-    setSqValue(value, i, j) {
+    setSqValue = (value, i, j) => {
         let {allSq, currPlayer, started, winner} = this.state;
 
         if (value || !started || winner)
@@ -67,9 +62,9 @@ class App extends Component {
             currPlayer = currPlayer === 'X' ? 'O' : 'X';
             this.setState({allSq, currPlayer});
         }
-    }
+    };
 
-    checkWinner(allSq, player, n=3) {
+    checkWinner(allSq, player, n = 3) {
         let diagonalSums = new Array(2).fill(0);
         let columnSums = new Array(n).fill(0);
         let rowSum = 0;
