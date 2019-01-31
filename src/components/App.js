@@ -97,7 +97,7 @@ class App extends Component {
 
         return (
             <div className="App">
-                <Button outline color="white" onClick={toggle}>{started ? 'Reset' : 'Start'}</Button>
+                <Button color="warning" onClick={toggle}>{started ? 'Reset' : 'Start'}</Button>
 
                 <StartModal handle={handle} toggle={toggle} modal={modal} players={players} start={start}></StartModal>
 
